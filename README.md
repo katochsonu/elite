@@ -1,7 +1,7 @@
 # elite
 
 A <Video> component for react-native, as seen in
-[react-native-login](https://github.com/katochsonu/elite.git)!
+[react-native-elite](https://github.com/katochsonu/elite.git)!
 
 Requires react-native >= 0.4.4
 
