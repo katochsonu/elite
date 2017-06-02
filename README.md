@@ -48,11 +48,10 @@ Run `npm install elite --save`
 
 ## TODOS
 
-- [ ] Add some way to interface with `seekToTime`
-- [ ] Add support for captions
-- [ ] Support `require('video!...')`
+- [ ] Add some way to interface with `timeseek`
+- [ ] Add support for video title
 - [ ] Add support for playing multiple videos in a sequence (will interfere with current `repeat` implementation)
-- [ ] Callback to get buffering progress for remote videos
+- [ ] Get buffering progress for remote videos
 
 ---
 
