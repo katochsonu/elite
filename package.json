@@ -1,5 +1,5 @@
 {
-  "name": "r-native-video",
+  "name": "SSnative-video",
   "version": "0.7.1",
   "description": "A <Video /> element for react-native",
   "main": "Video.js",

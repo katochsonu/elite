@@ -4,4 +4,5 @@ export default keyMirror({
   contain: null,
   cover: null,
   stretch: null,
+  time:null
 });

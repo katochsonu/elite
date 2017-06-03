@@ -14,13 +14,14 @@ const styles = StyleSheet.create({
   base: {
     overflow: 'hidden',
     backgroundColor: 'transparent',
-  },
+  },   
 });
 
 export default class Video extends Component {
-
+  
   constructor(props, context) {
     super(props, context);
+
     this.seek = this.seek.bind(this);
     this._assignRoot = this._assignRoot.bind(this);
     this._onLoadStart = this._onLoadStart.bind(this);
@@ -74,7 +75,7 @@ export default class Video extends Component {
   }
 
   _onEnd(event) {
-    if (this.props.onEnd) {
+        if (this.props.onEnd) {
       this.props.onEnd(event.nativeEvent);
     }
   }
@@ -84,6 +85,7 @@ export default class Video extends Component {
       source,
       resizeMode,
     } = this.props;
+    
 
     let uri = source.uri;
     if (uri && uri.match(/^\//)) {
@@ -135,6 +137,9 @@ Video.propTypes = {
   /* Native only */
   src: PropTypes.object,
   seek: PropTypes.number,
+
+  
+
 
   /* Wrapper component */
   source: PropTypes.object,

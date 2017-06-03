@@ -325,12 +325,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 5,
     color: '#000',
-    padding: 10,
+    padding: 20,
     margin: 40
   }
 });
 
 AppRegistry.registerComponent('VideoPlayer', () => VideoPlayer);
+
 
 
 
