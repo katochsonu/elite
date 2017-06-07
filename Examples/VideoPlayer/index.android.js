@@ -239,21 +239,21 @@ class VideoPlayer extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'black',
+    justifyContent: 'right',
+    alignItems: 'right',
+    backgroundColor: 'white',
   },
   fullScreen: {
-    position: 'absolute',
+    position: 'inherit',
     top: 0,
     left: 0,
     bottom: 0,
     right: 0,
   },
   controls: {
-    backgroundColor: "transparent",
+    backgroundColor: "inherit",
     borderRadius: 5,
-    position: 'absolute',
+    position: 'inherit',
     bottom: 44,
     left: 4,
     right: 4,
@@ -300,16 +300,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   controlOption: {
-    alignSelf: 'center',
+    alignSelf: 'right',
     fontSize: 11,
-    color: "white",
+    color: "black",
     paddingLeft: 2,
     paddingRight: 2,
     lineHeight: 12,
   },
   nativeVideoControls: {
-    top: 184,
-    height: 300
+    top: 199,
+    height: 350
   }
   container: {
     flex: 1,

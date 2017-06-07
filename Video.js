@@ -13,7 +13,7 @@ const {
 const styles = StyleSheet.create({
   base: {
     overflow: 'hidden',
-    backgroundColor: 'transparent',
+    backgroundColor: 'white',
   },   
 });
 
@@ -53,6 +53,11 @@ export default class Video extends Component {
   _onLoad(event) {
     if (this.props.onLoad) {
       this.props.onLoad(event.nativeEvent);
+    }
+  }
+  _onPause(event) {
+    if (this.props.onError) {
+      this.props.onPause(event.nativeEvent);
     }
   }
 
@@ -122,7 +127,9 @@ export default class Video extends Component {
       onVideoProgress: this._onProgress,
       onVideoSeek: this._onSeek,
       onVideoEnd: this._onEnd,
+      onVideoPause: this._onPause,
     });
+    
 
     return (
       <RCTVideo
@@ -138,7 +145,13 @@ Video.propTypes = {
   src: PropTypes.object,
   seek: PropTypes.number,
 
-  
+  {
+  type: Button,
+  props: {
+    color: 'blue',
+    children: 'OK!'
+  }
+}
 
 
   /* Wrapper component */

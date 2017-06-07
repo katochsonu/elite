@@ -59,6 +59,7 @@ class VideoPlayer extends Component {
     }
   }
 
+
   renderSkinControl(skin) {
     const isSelected = this.state.skin == skin;
     const selectControls = skin == 'native' || skin == 'embed';
@@ -79,7 +80,7 @@ class VideoPlayer extends Component {
 
     return (
       <TouchableOpacity onPress={() => { this.setState({rate: rate}) }}>
-        <Text style={[styles.controlOption, {fontWeight: isSelected ? "bold" : "normal"}]}>
+        <Text style={[styles.controlOption, {fontWeight: isSelected ? "Italic" : "normal"}]}>
           {rate}x
         </Text>
       </TouchableOpacity>
@@ -91,7 +92,7 @@ class VideoPlayer extends Component {
 
     return (
       <TouchableOpacity onPress={() => { this.setState({resizeMode: resizeMode}) }}>
-        <Text style={[styles.controlOption, {fontWeight: isSelected ? "bold" : "normal"}]}>
+        <Text style={[styles.controlOption, {fontWeight: isSelected ? "Italic" : "normal"}]}>
           {resizeMode}
         </Text>
       </TouchableOpacity>
@@ -103,7 +104,7 @@ class VideoPlayer extends Component {
 
     return (
       <TouchableOpacity onPress={() => { this.setState({volume: volume}) }}>
-        <Text style={[styles.controlOption, {fontWeight: isSelected ? "bold" : "normal"}]}>
+        <Text style={[styles.controlOption, {fontWeight: isSelected ? "Italic" : "normal"}]}>
           {volume * 100}%
         </Text>
       </TouchableOpacity>
@@ -126,8 +127,8 @@ class VideoPlayer extends Component {
                  resizeMode={this.state.resizeMode}
                  onLoad={this.onLoad}
                  onProgress={this.onProgress}
-                 onEnd={() => { AlertIOS.alert('Done!') }}
-                 repeat={true} />
+                 onEnd={() => { AlertIOS.alert('Complete!') }}
+                 repeat={false} />
         </TouchableOpacity>
 
         <View style={styles.controls}>
@@ -155,6 +156,7 @@ class VideoPlayer extends Component {
               {this.renderResizeModeControl('cover')}
               {this.renderResizeModeControl('contain')}
               {this.renderResizeModeControl('stretch')}
+              {this.renderResizeModeControl('shrink')}
             </View>
           </View>
 
