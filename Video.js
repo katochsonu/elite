@@ -12,7 +12,7 @@ const {
 
 const styles = StyleSheet.create({
   base: {
-    overflow: 'hidden',
+    overflow: 'true',
     backgroundColor: 'white',
   },   
 });
@@ -44,11 +44,7 @@ export default class Video extends Component {
     this._root = component;
   }
 
-  _onLoadStart(event) {
-    if (this.props.onLoadStart) {
-      this.props.onLoadStart(event.nativeEvent);
-    }
-  }
+  
 
   _onLoad(event) {
     if (this.props.onLoad) {
@@ -60,6 +56,11 @@ export default class Video extends Component {
       this.props.onPause(event.nativeEvent);
     }
   }
+  _onLoadStart(event) {
+    if (this.props.onLoadStart) {
+      this.props.onLoadStart(event.nativeEvent);
+    }
+  }
 
   _onError(event) {
     if (this.props.onError) {
@@ -67,17 +68,18 @@ export default class Video extends Component {
     }
   }
 
+ _onSeek(event) {
+    if (this.props.onSeek) {
+      this.props.onSeek(event.nativeEvent);
+    }
+  }
   _onProgress(event) {
     if (this.props.onProgress) {
       this.props.onProgress(event.nativeEvent);
     }
   }
 
-  _onSeek(event) {
-    if (this.props.onSeek) {
-      this.props.onSeek(event.nativeEvent);
-    }
-  }
+ 
 
   _onEnd(event) {
         if (this.props.onEnd) {
@@ -131,6 +133,7 @@ export default class Video extends Component {
     });
     
 
+
     return (
       <RCTVideo
         ref={this._assignRoot}
@@ -148,7 +151,7 @@ Video.propTypes = {
   {
   type: Button,
   props: {
-    color: 'blue',
+    color: 'red',
     children: 'OK!'
   }
 }
@@ -187,6 +190,6 @@ Video.propTypes = {
 const RCTVideo = requireNativeComponent('RCTVideo', Video, {
   nativeOnly: {
     src: true,
-    seek: true,
+    seek: false,
   },
 });

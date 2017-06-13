@@ -28,9 +28,9 @@ class VideoPlayer extends Component {
     resizeMode: 'contain',
     duration: 0.0,
     currentTime: 0.0,
-    controls: false,
+    controls: true,
     paused: true,
-    skin: 'custom'
+    skin: 'white'
   };
 
 
@@ -210,15 +210,7 @@ class VideoPlayer extends Component {
               {this.renderVolumeControl(1.5)}
             </View>
 
-            <View style={styles.resizeModeControl}>
-              {this.renderResizeModeControl('cover')}
-              {this.renderResizeModeControl('contain')}
-              {this.renderResizeModeControl('stretch')}
-            </View>
-          </View>
-       
-
-        <View style={styles.container}>
+<View style={styles.container}>
         <Camera
           ref={(cam) => {
             this.camera = cam;
@@ -229,6 +221,16 @@ class VideoPlayer extends Component {
         </Camera>
       </View>
        </View>
+       
+            <View style={styles.resizeModeControl}>
+              {this.renderResizeModeControl('cover')}
+              {this.renderResizeModeControl('contain')}
+              {this.renderResizeModeControl('stretch')}
+            </View>
+          </View>
+       
+
+        
       
     );
   }
