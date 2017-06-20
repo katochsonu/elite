@@ -23,8 +23,11 @@ export default class Video extends Component {
     super(props, context);
 
     this.seek = this.seek.bind(this);
+    
     this._assignRoot = this._assignRoot.bind(this);
+    
     this._onLoadStart = this._onLoadStart.bind(this);
+   
     this._onLoad = this._onLoad.bind(this);
     this._onError = this._onError.bind(this);
     this._onProgress = this._onProgress.bind(this);
@@ -185,11 +188,17 @@ Video.propTypes = {
   imageUri: PropTypes.string,
   
   /* Required by react-native */
+    
   scaleX: React.PropTypes.number,
+    
   scaleY: React.PropTypes.number,
+    
   translateX: React.PropTypes.number,
+    
+    
   translateY: React.PropTypes.number,
   rotation: React.PropTypes.number,
+    
   ...View.propTypes,
 };
 
