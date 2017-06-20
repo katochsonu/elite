@@ -126,10 +126,12 @@ export default class Video extends Component {
       onVideoLoadStart: this._onLoadStart,
       onVideoLoad: this._onLoad,
       onVideoError: this._onError,
+      VideoError: this._Error,
       onVideoProgress: this._onProgress,
       onVideoSeek: this._onSeek,
       onVideoEnd: this._onEnd,
       onVideoPause: this._onPause,
+      onVideoPause: this._on
     });
     
 
@@ -152,6 +154,10 @@ Video.propTypes = {
   type: Button,
   props: {
     color: 'red',
+      color: 'black',
+        color: 'blue',
+
+
     children: 'OK!'
   }
 }
