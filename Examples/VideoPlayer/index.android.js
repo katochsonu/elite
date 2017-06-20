@@ -1,19 +1,18 @@
 'use strict';
 
 import React, {
-  AlertIOS,
   AppRegistry,
   Component,
   StyleSheet,
   Text,
   TouchableOpacity,
-  Dimensions,
-  TouchableHighlight,
-  View
+  View,
 } from 'react-native';
 
 import Video from 'react-native-video';
-import Camera from 'react-native-camera';
+var screen    = require('Dimensions').get('window');
+var Recorder  = require('react-native-screcorder');
+var Video     = require('react-native-video');
 
 class VideoPlayer extends Component {
   constructor(props) {
@@ -21,6 +20,7 @@ class VideoPlayer extends Component {
     this.onLoad = this.onLoad.bind(this);
     this.onProgress = this.onProgress.bind(this);
   }
+
   state = {
     rate: 1,
     volume: 1,
@@ -28,21 +28,8 @@ class VideoPlayer extends Component {
     resizeMode: 'contain',
     duration: 0.0,
     currentTime: 0.0,
-    controls: false,
-    paused: true,
-    skin: 'custom'
   };
 
-
-
-  takePicture() {
-    const options = {};
-    this.camera.capture({metadata: options})
-      .then((data) => console.log(data))
-      .catch(err => console.error(err));
-  }
-}
-  
   onLoad(data) {
     this.setState({duration: data.duration});
   }
@@ -57,21 +44,6 @@ class VideoPlayer extends Component {
     } else {
       return 0;
     }
-  }
-
-  renderSkinControl(skin) {
-    const isSelected = this.state.skin == skin;
-    const selectControls = skin == 'native' || skin == 'embed';
-    return (
-      <TouchableOpacity onPress={() => { this.setState({
-          controls: selectControls,
-          skin: skin
-        }) }}>
-        <Text style={[styles.controlOption, {fontWeight: isSelected ? "bold" : "normal"}]}>
-          {skin}
-        </Text>
-      </TouchableOpacity>
-    );
   }
 
   renderRateControl(rate) {
@@ -110,7 +82,7 @@ class VideoPlayer extends Component {
     )
   }
 
-  renderCustomSkin() {
+  render() {
     const flexCompleted = this.getCurrentTimePercentage() * 100;
     const flexRemaining = (1 - this.getCurrentTimePercentage()) * 100;
 
@@ -126,22 +98,17 @@ class VideoPlayer extends Component {
                  resizeMode={this.state.resizeMode}
                  onLoad={this.onLoad}
                  onProgress={this.onProgress}
-                 onEnd={() => { AlertIOS.alert('Done!') }}
+                 onEnd={() => { console.log('Done!') }}
                  repeat={true} />
         </TouchableOpacity>
 
         <View style={styles.controls}>
           <View style={styles.generalControls}>
-            <View style={styles.skinControl}>
-              {this.renderSkinControl('custom')}
-              {this.renderSkinControl('native')}
-              {this.renderSkinControl('embed')}
-            </View>
-          </View>
-          <View style={styles.generalControls}>
             <View style={styles.rateControl}>
+              {this.renderRateControl(0.25)}
               {this.renderRateControl(0.5)}
               {this.renderRateControl(1.0)}
+              {this.renderRateControl(1.5)}
               {this.renderRateControl(2.0)}
             </View>
 
@@ -167,96 +134,249 @@ class VideoPlayer extends Component {
         </View>
       </View>
     );
-  }
+  
 
-  renderNativeSkin() {
-    const videoStyle = this.state.skin == 'embed' ? styles.nativeVideoControls : styles.fullScreen;
+var Record = React.createClass({
+
+  getInitialState: function() {
+    return {
+      device: "front",
+      recording: false,
+      nbSegments: 0,
+      barPosition: new Animated.Value(0),
+      currentDuration: 0,
+      maxDuration: 3000,
+      limitReached: false,
+      config: {
+        flashMode: Recorder.constants.SCFlashModeOff,
+        video: {
+          enabled: true,
+          format: 'MPEG4',
+        },
+      }
+    }
+  },
+
+  componentDidMount: function() {
+    StatusBarIOS.setHidden(true, "slide");
+  },
+
+  /*
+   *  PRIVATE METHODS
+   */
+
+  startBarAnimation: function() {
+    this.animRunning = true;
+    this.animBar = Animated.timing(
+      this.state.barPosition,
+      {
+        toValue: screen.width,
+        duration: this.state.maxDuration - this.state.currentDuration
+      }
+    );
+    this.animBar.start(() => {
+      // The video duration limit has been reached
+      if (this.animRunning) {
+        this.finish();
+      }
+    });
+  },
+
+  resetBarAnimation: function() {
+    Animated.spring(this.state.barPosition, {toValue: 0}).start();
+  },
+
+  stopBarAnimation: function() {
+    this.animRunning = false;
+    if (this.animBar)
+      this.animBar.stop();
+  },
+
+  /*
+   *  PUBLIC METHODS
+   */
+
+  record: function() {
+    if (this.state.limitReached) return;
+    this.refs.recorder.record();
+    this.startBarAnimation();
+    this.setState({recording: true});
+  },
+
+  pause: function(limitReached) {
+    if (!this.state.recording) return;
+    this.refs.recorder.pause();
+    this.stopBarAnimation();
+    this.setState({recording: false, nbSegments: ++this.state.nbSegments});
+  },
+
+  finish: function() {
+    this.stopBarAnimation();
+    this.refs.recorder.pause();
+    this.setState({recording: false, limitReached: true, nbSegments: ++this.state.nbSegments});
+  },
+
+  reset: function() {
+    this.resetBarAnimation();
+    this.refs.recorder.removeAllSegments();
+    this.setState({
+      recording: false,
+      nbSegments: 0,
+      currentDuration: 0,
+      limitReached: false
+    });
+  },
+
+  preview: function() {
+    this.refs.recorder.save((err, url) => {
+      console.log('url = ', url);
+      this.props.navigator.push({component: Preview, passProps: {video: url}});
+    });
+  },
+
+  setDevice: function() {
+    var device = (this.state.device == "front") ? "back" : "front";
+    this.setState({device: device});
+  },
+
+  toggleFlash: function() {
+    if (this.state.config.flashMode == Recorder.constants.SCFlashModeOff) {
+      this.state.config.flashMode = Recorder.constants.SCFlashModeLight;
+    } else {
+      this.state.config.flashMode = Recorder.constants.SCFlashModeOff;
+    }
+    this.setState({config: this.state.config});
+  },
+
+  /*
+   *  EVENTS
+   */
+
+  onRecordDone: function() {
+    this.setState({nbSegments: 0});
+  },
+
+  onNewSegment: function(segment) {
+    console.log('segment = ', segment);
+    this.state.currentDuration += segment.duration * 1000;
+  },
+
+  /*
+   *  RENDER METHODS
+   */
+
+  renderBar: function() {
     return (
-      <View style={styles.container}>
-        <View style={styles.fullScreen}>
-          <Video source={{uri: "broadchurch"}}
-                 style={videoStyle}
-                 rate={this.state.rate}
-                 paused={this.state.paused}
-                 volume={this.state.volume}
-                 muted={this.state.muted}
-                 resizeMode={this.state.resizeMode}
-                 onLoad={this.onLoad}
-                 onProgress={this.onProgress}
-                 onEnd={() => { AlertIOS.alert('Done!') }}
-                 repeat={true}
-                 controls={this.state.controls} />
+      <View style={styles.barWrapper}>
+        <Animated.View style={[styles.barGauge, {width: this.state.barPosition}]}/>
+      
+
+  render: function() {
+    var bar     = this.renderBar();
+    var control = null;
+
+    if (!this.state.limitReached) {
+      control = (
+        <TouchableOpacity onPressIn={this.record} onPressOut={this.pause} style={styles.controlBtn}>
+          <Text>Record</Text>
+        </TouchableOpacity>
+      );
+    }
+
+    return (
+      <Recorder
+        ref="recorder"
+        config={this.state.config}
+        device={this.state.device}
+        onNewSegment={this.onNewSegment}
+        style={styles.wrapper}>
+        {bar}
+        <View style={styles.infoBtn}>
+          <Text style={styles.infoBtnText}>{this.state.nbSegments}</Text>
         </View>
         <View style={styles.controls}>
-          <View style={styles.generalControls}>
-            <View style={styles.skinControl}>
-              {this.renderSkinControl('custom')}
-              {this.renderSkinControl('native')}
-              {this.renderSkinControl('embed')}
-            </View>
-          </View>
-          <View style={styles.generalControls}>
-            <View style={styles.rateControl}>
-              {this.renderRateControl(0.5)}
-              {this.renderRateControl(1.0)}
-              {this.renderRateControl(2.0)}
-            </View>
-
-            <View style={styles.volumeControl}>
-              {this.renderVolumeControl(0.5)}
-              {this.renderVolumeControl(1)}
-              {this.renderVolumeControl(1.5)}
-            </View>
-
-            <View style={styles.resizeModeControl}>
-              {this.renderResizeModeControl('cover')}
-              {this.renderResizeModeControl('contain')}
-              {this.renderResizeModeControl('stretch')}
-            </View>
-          </View>
-       
-
-        <View style={styles.container}>
-        <Camera
-          ref={(cam) => {
-            this.camera = cam;
-          }}
-          style={styles.preview}
-          aspect={Camera.constants.Aspect.fill}>
-          <Text style={styles.capture} onPress={this.takePicture.bind(this)}>[CAPTURE]</Text>
-        </Camera>
-      </View>
-       </View>
-      
+          {control}
+          <TouchableOpacity onPressIn={this.reset} style={styles.controlBtn}>
+            <Text>Reset</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this.preview} style={styles.controlBtn}>
+            <Text>Preview</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this.toggleFlash} style={styles.controlBtn}>
+            <Text>Flash</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this.setDevice} style={styles.controlBtn}>
+            <Text>Switch</Text>
+          </TouchableOpacity>
+        </View>
+      </Recorder>
     );
   }
 
-  render() {
-    return this.state.controls ? this.renderNativeSkin() : this.renderCustomSkin();
+});
+
+/*********** PREVIEW COMPONENT ***********/
+
+var Preview = React.createClass({
+
+  getInitialState: function() {
+    return {
+      paused: false
+    };
+  },
+
+  goBack: function() {
+    this.setState({paused: true});
+    this.props.navigator.pop();
+  },
+
+  render: function() {
+    return (
+      <TouchableWithoutFeedback onPress={this.goBack}>
+        <Video
+          source={{uri: this.props.video}}
+          style={styles.wrapper}
+          muted={false}
+          resizeMode="cover"
+          paused={this.state.paused}
+          repeat={true}/>
+      </TouchableWithoutFeedback>
+    );
   }
-}
+
+});
+
+/*********** APP COMPONENT ***********/
+
+var App = React.createClass({
+
+  render: function() {
+    return (
+      <NavigatorIOS initialRoute={{component: Record}} style={{flex: 1}
+
+
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'right',
-    alignItems: 'right',
-    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black',
   },
   fullScreen: {
-    position: 'inherit',
+    position: 'absolute',
     top: 0,
     left: 0,
     bottom: 0,
     right: 0,
   },
   controls: {
-    backgroundColor: "inherit",
+    backgroundColor: "transparent",
     borderRadius: 5,
-    position: 'inherit',
-    bottom: 44,
-    left: 4,
-    right: 4,
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+    right: 20,
   },
   progress: {
     flex: 1,
@@ -275,13 +395,9 @@ const styles = StyleSheet.create({
   generalControls: {
     flex: 1,
     flexDirection: 'row',
+    borderRadius: 4,
     overflow: 'hidden',
     paddingBottom: 10,
-  },
-  skinControl: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
   },
   rateControl: {
     flex: 1,
@@ -297,40 +413,16 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   controlOption: {
-    alignSelf: 'right',
+    alignSelf: 'center',
     fontSize: 11,
-    color: "black",
+    color: "white",
     paddingLeft: 2,
     paddingRight: 2,
     lineHeight: 12,
   },
-  nativeVideoControls: {
-    top: 199,
-    height: 350
-  }
-  container: {
-    flex: 1,
-    flexDirection: 'row',
-  },
-  preview: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    alignItems: 'center'
-  },
-  capture: {
-    flex: 0,
-    backgroundColor: '#fff',
-    borderRadius: 5,
-    color: '#000',
-    padding: 10,
-    margin: 40
-  }
 });
 
 AppRegistry.registerComponent('VideoPlayer', () => VideoPlayer);
-
-
-
