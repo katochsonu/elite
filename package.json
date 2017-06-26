@@ -41,6 +41,13 @@
     "babel-eslint": "5.0.0-beta8",
     "eslint-plugin-react": "3.16.1",
     "eslint-config-airbnb": "4.0.0"
+    "@types/react": "^15.0.21",
+    "jest": "^19.0.2",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2",
+    "ts-jest": "^19.0.6",
+    "typescript": "^2.2.2",
+    "webpack": "^2.3.3"
   },
   "dependencies": {
     "keymirror": "0.1.1",
