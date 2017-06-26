@@ -13,6 +13,10 @@ import Video from 'react-native-video';
 var screen    = require('Dimensions').get('window');
 var Recorder  = require('react-native-screcorder');
 var Video     = require('react-native-video');
+import AudioRecorder from '../AudioRecorder';
+
+const testBlobA = new Blob();
+const testBlobB = new Blob()
 
 class VideoPlayer extends Component {
   constructor(props) {
