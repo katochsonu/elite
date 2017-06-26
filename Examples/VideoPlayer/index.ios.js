@@ -164,7 +164,29 @@ var Record = React.createClass({
   /*
    *  PRIVATE METHODS
    */
+describe('AudioRecoder', () => {
 
+  it('should not throw an error when unmounting', () => {
+
+  });
+
+  it('should not throw an error when remounting', () => {
+
+  });
+
+  it('should delete recording buffer when clicking remove', () => {
+
+  });
+
+  it('should not pad the blob with empty data', () => {
+
+  });
+
+  it('should not allow for overlapping playback', () => {
+
+  });
+
+});
   startBarAnimation: function() {
     this.animRunning = true;
     this.animBar = Animated.timing(
