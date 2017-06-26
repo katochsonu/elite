@@ -13,6 +13,11 @@ import Video from 'react-native-video';
 var screen    = require('Dimensions').get('window');
 var Recorder  = require('react-native-screcorder');
 var Video     = require('react-native-video');
+import AudioRecorder from '../AudioRecorder';
+
+const testBlobA = new Blob();
+const testBlobB = new Blob();
+
 
 class VideoPlayer extends Component {
   constructor(props) {
@@ -46,6 +51,29 @@ class VideoPlayer extends Component {
     }
   }
 
+describe('AudioRecoder', () => {
+
+  it('should not throw an error when unmounting', () => {
+
+  });
+
+  it('should not throw an error when remounting', () => {
+
+  });
+
+  it('should delete recording buffer when clicking remove', () => {
+
+  });
+
+  it('should not pad the blob with empty data', () => {
+
+  });
+
+  it('should not allow for overlapping playback', () => {
+
+  });
+
+});
   renderRateControl(rate) {
     const isSelected = (this.state.rate == rate);
 
