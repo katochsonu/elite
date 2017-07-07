@@ -33,15 +33,17 @@ task bundleDebugJsAndAssets(type: Exec) {
 
     // set up inputs and outputs so gradle can cache the result
     inputs.files fileTree(dir: reactRoot, excludes: inputExcludes)
-    outputs.dir jsBundleDirDebug
+    outputs.dir jsBundleDirDebug  
     outputs.dir resourcesDirDebug
 
-    // set up the call to the react-native cli
+    // set up the call to the react-native cli   
     workingDir reactRoot
-    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+    if (Os.isFamily(Os.FAMILY_WINDOWS))
+    {
         commandLine "cmd", "/c", "react-native", "bundle", "--platform", "android", "--dev", "true", "--entry-file",
             entryFile, "--bundle-output", jsBundleFileDebug, "--assets-dest", resourcesDirDebug
-    } else {
+    } 
+    else {
         commandLine "react-native", "bundle", "--platform", "android", "--dev", "true", "--entry-file",
             entryFile, "--bundle-output", jsBundleFileDebug, "--assets-dest", resourcesDirDebug
     }
@@ -49,7 +51,8 @@ task bundleDebugJsAndAssets(type: Exec) {
     enabled config.bundleInDebug ?: false
 }
 
-task bundleReleaseJsAndAssets(type: Exec) {
+task bundleReleaseJsAndAssets(type: Exec)
+{
     // create dirs if they are not there (e.g. the "clean" task just ran)
     doFirst {
         jsBundleDirRelease.mkdirs()
@@ -63,7 +66,8 @@ task bundleReleaseJsAndAssets(type: Exec) {
 
     // set up the call to the react-native cli
     workingDir reactRoot
-    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+    if (Os.isFamily(Os.FAMILY_WINDOWS)) 
+    {
         commandLine "cmd","/c", "react-native", "bundle", "--platform", "android", "--dev", "false", "--entry-file",
             entryFile, "--bundle-output", jsBundleFileRelease, "--assets-dest", resourcesDirRelease
     } else {
@@ -74,7 +78,8 @@ task bundleReleaseJsAndAssets(type: Exec) {
     enabled config.bundleInRelease ?: true
 }
 
-void runBefore(String dependentTaskName, Task task) {
+void runBefore(String dependentTaskName, Task task) 
+{
     Task dependentTask = tasks.findByPath(dependentTaskName);
     if (dependentTask != null) {
         dependentTask.dependsOn task
