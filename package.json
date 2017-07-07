@@ -43,19 +43,19 @@
     "eslint-config-airbnb": "4.0.0"
     "@types/react": "^15.0.21",
     "jest": "^19.0.2",
-    "react": "^15.4.2",
+    "react": "^16.4.2",
     "react-dom": "^15.4.2",
-    "ts-jest": "^19.0.6",
+    "ts-jest": "^20.0.6",
     "typescript": "^2.2.2",
     "webpack": "^2.3.3"
   },
   "dependencies": {
     "keymirror": "0.1.1",
-    "react-native-video": "^1.0.0"
-    "@exponent/ex-navigation": "^1.6.0",
-    "@exponent/vector-icons": "^1.0.4",
+    "react-native-video": "^2.0.0"
+    "@exponent/ex-navigation": "^2.6.0",
+    "@exponent/vector-icons": "^2.0.4",
     "exponent": "~12.0.0",
-    "react-native-svg": "^4.3.3"
+    "react-native-svg": "^2.3.3"
   },
   "scripts": {
     "test": "node_modules/.bin/eslint *.js"
