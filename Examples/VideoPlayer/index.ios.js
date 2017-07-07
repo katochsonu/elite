@@ -18,11 +18,11 @@ import React from 'react';
 import { Dimensions, View,
          Text, StyleSheet } from 'react-native';
 import { takeSnapshotAsync } from 'exponent';
-import Colors from '../constants/Colors';
-import SignatureView from '../components/SignatureView';
+import Colors from '../constants';
+import SignatureView from '../components';
 import Header from '../components/Header';
-import ColorSelector from '../components/ColorSelector';
-import ResultImages from '../components/ResultImages';
+import ColorSelector from '../components';
+import ResultImages from '../components';
 
 const testBlobA = new Blob();
 const testBlobB = new Blob()
@@ -119,16 +119,16 @@ class VideoPlayer extends Component {
           <View style={styles.generalControls}>
             <View style={styles.rateControl}>
               {this.renderRateControl(0.25)}
-              {this.renderRateControl(0.5)}
-              {this.renderRateControl(1.0)}
               {this.renderRateControl(1.5)}
               {this.renderRateControl(2.0)}
+              {this.renderRateControl(2.5)}
+              {this.renderRateControl(3.0)}
             </View>
 
             <View style={styles.volumeControl}>
               {this.renderVolumeControl(0.5)}
-              {this.renderVolumeControl(1)}
-              {this.renderVolumeControl(1.5)}
+              {this.renderVolumeControl(2)}
+              {this.renderVolumeControl(1.)}
             </View>
 
             <View style={styles.resizeModeControl}>
@@ -314,15 +314,17 @@ describe('AudioRecoder', () => {
 
     if (!this.state.limitReached) {
       control = (
+        
         <TouchableOpacity onPressIn={this.record} onPressOut={this.pause} style={styles.controlBtn}>
           <Text>Record</Text>
+        
         </TouchableOpacity>
       );
     }
 
     return (
       <Recorder
-        ref="recorder"
+        ref="recorder"/
         config={this.state.config}
         device={this.state.device}
         onNewSegment={this.onNewSegment}
@@ -370,10 +372,10 @@ var Preview = React.createClass({
   render: function() {
     return (
       <TouchableWithoutFeedback onPress={this.goBack}>
-        <Video
+        <Video 
           source={{uri: this.props.video}}
           style={styles.wrapper}
-          muted={false}
+          muted={false} 
           resizeMode="cover"
           paused={this.state.paused}
           repeat={true}/>
@@ -387,10 +389,10 @@ export default class SignatureScreen extends React.Component {
   constructor(props, context) {
     super(props, context);
 
-    this.state = {
+    this.state = { 
       results: [],
-      color: Colors.color16,
-      strokeWidth: 4,
+      color: Colors.color67, 
+      strokeWidth: 5, 
       donePaths: []
     };
 
@@ -403,13 +405,13 @@ export default class SignatureScreen extends React.Component {
   }
 
   _undo = () => {
-    this.setState({ donePaths: this.state.donePaths.slice(0, -1) });
+    this.setState({ donePaths: this.state.donePaths.slice(0, -2) });
   }
 
   _save = async () => {
     const result = await takeSnapshotAsync(
       this._signatureView,
-      { format: 'png', result: 'base64', quality: 1.0 }
+      { format: 'png', result: 'base64', quality: 2.0 }
     );
 
     const results = this.state.results;
@@ -442,7 +444,7 @@ export default class SignatureScreen extends React.Component {
             ref={(view) => { this._signatureView = view; }}
             donePaths={this.state.donePaths}
             setDonePaths={this._setDonePaths}
-            containerStyle={{ backgroundColor: '#FFF', marginTop: 10 }}
+            containerStyle={{ backgroundColor: '#FFF', marginTop: 20 }}
             width={Dimensions.get('window').width - 20}
             height={Dimensions.get('window').width - 20}
             color={this.state.color}
